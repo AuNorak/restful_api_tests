@@ -58,11 +58,15 @@ class TestRestfulAPI(unittest.TestCase):
         self.assertCountEqual(data.keys(), expected_keys)
     # tests the shape of the object is vaguely as expected
 
-    def test_get_string_object_returns_404(self):
+    def test_get_string_object_returns_404_with_error_payload(self):
         endpoint = f"{self.BASE_URL}/objects/jon"
         response = requests.get(endpoint)
+        payload = {'error': 'Object with id=jon was not found.'}
         self.assertEqual(response.status_code, 404)
+        self.assertEqual(payload, response.json())
     # tests the endpoint returns 404 for a string object
+    # there may be an argument to split out a seperate test for testing response payload
+    # test fails, but this is a bug in restful API so I'm leaving the assertion as is
 
     def test_get_non_existent_object_returns_404(self):
         endpoint = f"{self.BASE_URL}/objects/100"
