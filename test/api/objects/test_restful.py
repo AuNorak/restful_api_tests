@@ -1,13 +1,12 @@
-import unittest
 import requests
 
-class TestRestfulAPI(unittest.TestCase):
+class TestRestfulAPI():
     BASE_URL = "https://api.restful-api.dev"
 
     def test_get_all_objects_returns_200(self):
         endpoint = f"{self.BASE_URL}/objects"
         response = requests.get(endpoint)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
     # tests the endpoint returns 200 for the full list of objects
 
     # def test_get_all_objects_as_unauthenticated_returns_403(self):
@@ -19,7 +18,7 @@ class TestRestfulAPI(unittest.TestCase):
     def test_get_single_object_returns_200(self):
         endpoint = f"{self.BASE_URL}/objects/1"
         response = requests.get(endpoint)
-        self.assertEqual(response.status_code, 200)
+        assert response.status_code == 200
     # tests the endpoint returns 200 for a single objects in the list
 
     def test_get_multiple_object_returns_requested_objects(self):
@@ -28,7 +27,7 @@ class TestRestfulAPI(unittest.TestCase):
         data = response.json()
         expected_ids = ["1", "4", "5"]
         actual_ids = [obj['id'] for obj in data]
-        self.assertCountEqual(actual_ids, expected_ids)
+        assert actual_ids == expected_ids
     # tests the endpoint returns 3 objects and the correct objects
 
     def test_get_multiple_same_object_returns_multiple_objects(self):
@@ -37,7 +36,7 @@ class TestRestfulAPI(unittest.TestCase):
         data = response.json()
         expected_ids = ["1","1","1"]
         actual_ids = [obj['id'] for obj in data]
-        self.assertCountEqual(actual_ids, expected_ids)
+        assert actual_ids == expected_ids
     # tests the endpoint returns the same object multiple times when queried for the same object multiple times, I wasn't sure what the behaviour would be here and 
     # was looking for a breaking case, there may be an argument to remove this
 
@@ -45,9 +44,9 @@ class TestRestfulAPI(unittest.TestCase):
         endpoint = f"{self.BASE_URL}/objects"
         response = requests.get(endpoint)
         data = response.json()
-        self.assertIsInstance(data, list)
+        assert isinstance(data, list)
         for obj in data:
-            self.assertIsInstance(obj, dict)
+            assert isinstance(obj, dict)
     # tests the endpoint returns 200 for the full list of objects
 
     def test_get_single_object_shape(self):
@@ -55,15 +54,16 @@ class TestRestfulAPI(unittest.TestCase):
         response = requests.get(endpoint)
         data = response.json()
         expected_keys = ['id', 'name', 'data']
-        self.assertCountEqual(data.keys(), expected_keys)
+        # assert sorted(data.keys()) == sorted(expected_keys)
+        assert set(data.keys()) == expected_keys
     # tests the shape of the object is vaguely as expected
 
     def test_get_string_object_returns_404_with_error_payload(self):
         endpoint = f"{self.BASE_URL}/objects/jon"
         response = requests.get(endpoint)
         payload = {'error': 'Object with id=jon was not found.'}
-        self.assertEqual(response.status_code, 404)
-        self.assertEqual(payload, response.json())
+        assert response.status_code == 404
+        assert payload == response.json()
     # tests the endpoint returns 404 for a string object
     # there may be an argument to split out a seperate test for testing response payload
     # test fails, but this is a bug in restful API so I'm leaving the assertion as is
@@ -71,7 +71,7 @@ class TestRestfulAPI(unittest.TestCase):
     def test_get_non_existent_object_returns_404(self):
         endpoint = f"{self.BASE_URL}/objects/100"
         response = requests.get(endpoint)
-        self.assertEqual(response.status_code, 404)
+        assert response.status_code == 404
     # tests the endpoint returns 404 for a single object not in the list
 
     # def test_post(self):
@@ -82,6 +82,3 @@ class TestRestfulAPI(unittest.TestCase):
 
     # def test_delete(self):
     #     pass  # Implement DELETE test here
-
-if __name__ == "__main__":
-    unittest.main()
