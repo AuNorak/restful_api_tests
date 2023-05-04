@@ -32,4 +32,4 @@ Provide clear instructions on how to use your project, including any necessary c
 ### Running the tests
 
 To run the tests, execute the following command:
-poetry run python restful_testful.py
+poetry run pytest
