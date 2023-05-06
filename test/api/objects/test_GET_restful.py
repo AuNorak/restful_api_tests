@@ -73,12 +73,3 @@ class TestRestfulAPI():
         response = requests.get(endpoint)
         assert response.status_code == 404
     # tests the endpoint returns 404 for a single object not in the list
-
-    # def test_post(self):
-    #     pass  # Implement POST test here
-
-    # def test_put(self):
-    #     pass  # Implement PUT test here
-
-    # def test_delete(self):
-    #     pass  # Implement DELETE test here
