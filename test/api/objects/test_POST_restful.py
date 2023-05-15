@@ -15,7 +15,7 @@ def test_post_invalid_json():
     response = requests.post(request_url, json=invalid_json, headers=headers)
     assert response.status_code == 400
 
-    # The follow tests fail because REST API accepts POST requests that are malformed, if this is acceptable the assertions could be changed or the tests removed
+# The follow tests fail because REST API accepts POST requests that are malformed, if this is acceptable the assertions could be changed or the tests removed
 
 def test_post_missing_required_field():
     new_object = {"data": {"color": "blue", "price": 99}}
