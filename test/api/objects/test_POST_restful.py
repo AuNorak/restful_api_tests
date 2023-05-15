@@ -1,6 +1,6 @@
 import pytest
 import requests
-from constants import BASE_URL, DEFAULT_PAYLOAD, headers, request_url
+from constants import DEFAULT_PAYLOAD, headers, request_url
 
 def test_post_valid_data():
     response = requests.post(request_url, json=DEFAULT_PAYLOAD, headers=headers)
