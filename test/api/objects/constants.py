@@ -1,4 +1,4 @@
 BASE_URL = "https://api.restful-api.dev"
-DEFAULT_PAYLOAD = {"name": "Apple AirPods", "data": {"color": "white", "generation": "3rd", "price": 135}}
+DEFAULT_PAYLOAD = {"name": "Test Product", "data": {"color": "blue", "generation": "1st", "price": 99}}
 headers = {"content-type": "application/json"}
 request_url = "https://api.restful-api.dev/objects"
