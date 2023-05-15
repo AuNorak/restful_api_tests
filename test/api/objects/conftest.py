@@ -1,6 +1,6 @@
 import pytest
 import requests
-from constants import BASE_URL, DEFAULT_PAYLOAD, headers, request_url
+from constants import DEFAULT_PAYLOAD, headers, request_url
 
 @pytest.fixture
 def objects_fixture():
@@ -9,4 +9,4 @@ def objects_fixture():
     object_id = response.json()['id']
     yield object_id
 
-    requests.delete(f"{BASE_URL}/objects/{object_id}")
+    requests.delete(f"{request_url}/{object_id}")
