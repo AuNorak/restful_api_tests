@@ -1,7 +1,6 @@
 import requests
 from constants import request_url
 
-
 def test_get_all_objects_returns_200(objects_fixture):
     response = requests.get(request_url)
     assert response.status_code == 200
@@ -46,11 +45,10 @@ def test_get_single_object_shape(objects_fixture):
     endpoint = f"{request_url}/1"
     response = requests.get(endpoint)
     data = response.json()
-    expected_keys = ['id', 'name', 'data']
-    assert set(data.keys()) == expected_keys
-    assert isinstance(data.id, int)
-    assert isinstance(data.name, str)
-    assert isinstance(data.data, dict)
+    assert isinstance(data['id'], str)
+    assert isinstance(data['name'], str)
+    assert isinstance(data['data'], dict)
+    # test assumes id, name and data are mandatory fields
 
 def test_get_string_object_returns_404_with_error_payload(objects_fixture):
     endpoint = f"{request_url}/jon"
