@@ -1,6 +1,8 @@
 # restful_api_tests
 
-This is a
+This is a test suite developed for RESTFUL API. 
+
+NOTE: Limit of 100 requests per day to RESTFUL API.
 
 ## Prerequisites
 
@@ -32,4 +34,4 @@ Provide clear instructions on how to use your project, including any necessary c
 ### Running the tests
 
 To run the tests, execute the following command:
-poetry run pytest
+poetry run pytest (optional)[PathToTestFile]
