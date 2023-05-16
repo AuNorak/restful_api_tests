@@ -1,45 +1,47 @@
 import pytest
 import requests
-import json
+from constants import headers, request_url
 
-BASE_URL = "https://api.restful-api.dev"
+def test_put_update_existing_object_name(objects_fixture):
+    created_object_endpoint = f"{request_url}/{objects_fixture}"
 
+    put_payload = {"name": "Apple AirPods", "data": {"color": "white", "generation": "3rd", "price": 120}}
+    put_response = requests.put(created_object_endpoint, json=put_payload, headers=headers)
+    assert put_response.status_code == 200
+    print(f"PUT content: {put_response.content}")
 
+    get_response = requests.get(created_object_endpoint, headers=headers)
+    assert get_response.status_code == 200
+    fetched_object = get_response.json()
+    assert fetched_object["data"]["price"] == 120
 
+def test_put_update_non_existent_object():
+    non_existent_id = 9999
+    put_endpoint = f"{request_url}/{non_existent_id}"
 
-@pytest.fixture
-def existing_object():
-    object_id = 6
-    response = requests.get(f"{BASE_URL}/objects/{object_id}")
-    return response.json()
+    put_payload = {"name": "Apple AirPods", "data": {"color": "white", "generation": "3rd", "price": 120}}
+    put_response = requests.put(put_endpoint, json=put_payload, headers=headers)
+    print(f"PUT content: {put_response.content}")
+    assert put_response.status_code == 404
 
-@pytest.fixture
-def existing_object_endpoint(existing_object):
-    return f"{BASE_URL}/objects/{existing_object['id']}"
+# The following tests fail because REST API accepts PUT requests that are malformed, if this is acceptable the assertions could be changed or the tests removed
+def test_put_invalid_data_type(objects_fixture):
+    created_object_endpoint = f"{request_url}/{objects_fixture}"
 
-def test_update_existing_object_name(existing_object, existing_object_endpoint):
-    headers = {"content-type": "application/json"}
-    payload = json.dumps({ "name": "Apple AirPods", "data": { "color": "white", "generation": "3rd", "price": 135}})
-    requestUrl = "https://api.restful-api.dev/objects/6"
-    r = requests.put(requestUrl, data=payload, headers=headers)
-    response = requests.get(existing_object_endpoint)
-    fetched_object = response.json()
-    assert fetched_object['data']['price'] == 135
+    put_payload = {"name": "Test Product", "data": {"color": "blue", "price": "invalid"}}
+    put_response = requests.put(created_object_endpoint, json=put_payload, headers=headers)
+    assert put_response.status_code == 400
 
-# def test_update_existing_object_name(existing_object, existing_object_endpoint):
-#     headers = {"content-type": "application/json"}
-#     updated_object = {'name': f"updated_{existing_object['name']}"}
-#     response = requests.put(existing_object_endpoint, json=updated_object, headers=headers)
-#     assert response.status_code == 200
+def test_put_extra_field(objects_fixture):
+    created_object_endpoint = f"{request_url}/{objects_fixture}"
 
-#     response = requests.get(existing_object_endpoint)
-#     fetched_object = response.json()
-    
-#     assert fetched_object['name'] == updated_object['name']
+    put_payload = {"name": "Test Product", "extra_field": "Not required", "data": {"color": "blue", "price": 99}}
+    put_response = requests.put(created_object_endpoint, json=put_payload, headers=headers)
+    assert put_response.status_code == 400
 
-# def test_update_non_existent_object(self):
-#     non_existent_id = 9999
-#     updated_object = {"key1": "updated_value1", "key2": "updated_value2"}
-#     response = requests.put(f"{self.BASE_URL}/objects/{non_existent_id}", json=updated_object)
+# The following test fails because REST API returns 405, which is not the correct error code
+def test_put_empty_json(objects_fixture):
+    created_object_endpoint = f"{request_url}/{objects_fixture}"
 
-#     assert response.status_code == 404
+    put_response = requests.post(created_object_endpoint, json={}, headers=headers)
+    assert put_response.status_code == 400
